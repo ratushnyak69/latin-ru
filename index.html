@@ -3,45 +3,50 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Translit</title>
+<title>Latinica.nr</title>
 <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@300;400;600&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --bg: #0e0e11;
-    --surface: #16161a;
-    --surface2: #1e1e24;
-    --border: rgba(255,255,255,0.07);
-    --border-active: rgba(255,255,255,0.18);
-    --accent: #c8f04a;
-    --accent-dim: rgba(200,240,74,0.12);
-    --text: #f0f0ee;
-    --text-muted: rgba(240,240,238,0.4);
-    --text-dim: rgba(240,240,238,0.65);
+    --accent: #80A6FF;
+    --accent-dim: rgba(128,166,255,0.12);
+    --accent-muted: rgba(128,166,255,0.35);
     --radius: 16px;
     --font-display: 'Unbounded', sans-serif;
     --font-mono: 'JetBrains Mono', monospace;
   }
 
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg: #ffffff;
+      --surface: #f4f4f6;
+      --surface2: #ebebef;
+      --border: rgba(0,0,0,0.07);
+      --border-active: rgba(128,166,255,0.5);
+      --text: #80A6FF;
+      --text-muted: rgba(128,166,255,0.45);
+      --text-dim: rgba(128,166,255,0.7);
+    }
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0e0e11;
+      --surface: #16161a;
+      --surface2: #1e1e24;
+      --border: rgba(255,255,255,0.07);
+      --border-active: rgba(128,166,255,0.4);
+      --text: #80A6FF;
+      --text-muted: rgba(128,166,255,0.4);
+      --text-dim: rgba(128,166,255,0.65);
+    }
+  }
+
   html, body { height: 100%; background: var(--bg); color: var(--text); font-family: var(--font-mono); overflow-x: hidden; }
   body { display: flex; flex-direction: column; min-height: 100vh; }
 
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image:
-      linear-gradient(rgba(200,240,74,0.025) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(200,240,74,0.025) 1px, transparent 1px);
-    background-size: 48px 48px;
-    pointer-events: none;
-    z-index: 0;
-  }
-
   .container {
-    position: relative;
-    z-index: 1;
     max-width: 1100px;
     margin: 0 auto;
     padding: 32px 24px 48px;
@@ -115,7 +120,7 @@
     flex-shrink: 0;
   }
 
-  .swap-btn:hover { border-color: var(--border-active); color: var(--text); transform: rotate(180deg); }
+  .swap-btn:hover { border-color: var(--border-active); color: var(--accent); transform: rotate(180deg); }
 
   .editors {
     display: grid;
@@ -222,16 +227,16 @@
     letter-spacing: 0.04em;
   }
 
-  .btn:hover { border-color: var(--border-active); color: var(--text); }
+  .btn:hover { border-color: var(--border-active); color: var(--accent); }
 
   .btn.primary {
     background: var(--accent);
     border-color: var(--accent);
-    color: #0e0e11;
+    color: var(--bg);
     font-weight: 600;
   }
 
-  .btn.primary:hover { background: #d4f55a; }
+  .btn.primary:hover { opacity: 0.88; }
   .btn.primary:active { transform: scale(0.97); }
 
   .copy-badge {
@@ -249,31 +254,31 @@
 <div class="container">
 
   <header>
-    <div class="logo">translit<span>.app</span></div>
-    <div class="stats" id="wc-display">0 слов · 0 символов</div>
+    <div class="logo">Latinica<span>.nr</span></div>
+    <div class="stats" id="wc-display">0 slov · 0 simvolov</div>
   </header>
 
   <div class="direction-bar">
-    <button class="dir-btn active" id="btn-ru-lat" onclick="setMode('ru-lat')">КИР → LAT</button>
-    <button class="swap-btn" onclick="swapMode()" title="Поменять направление">⇄</button>
-    <button class="dir-btn" id="btn-lat-ru" onclick="setMode('lat-ru')">LAT → КИР</button>
+    <button class="dir-btn active" id="btn-ru-lat" onclick="setMode('ru-lat')">Kirillica → Latinica</button>
+    <button class="swap-btn" onclick="swapMode()" title="Pomenatj napravlenie">⇄</button>
+    <button class="dir-btn" id="btn-lat-ru" onclick="setMode('lat-ru')">Latinica → Kirillica</button>
   </div>
 
   <div class="editors">
     <div class="editor-wrap">
       <div class="editor-header">
-        <span class="editor-label active-label" id="label-in">Кириллица</span>
+        <span class="editor-label active-label" id="label-in">Kirillica</span>
         <span class="char-count" id="char-in">0</span>
       </div>
-      <textarea id="src" placeholder="Вставь или напиши текст здесь...&#10;До 5 страниц (~10 000 символов)"></textarea>
+      <textarea id="src" placeholder="Vstavjte ili napišite tekst zdesj...&#10;Do 5 stranic (~10 000 simvolov)"></textarea>
     </div>
 
     <div class="editor-wrap output-wrap">
       <div class="editor-header">
-        <span class="editor-label" id="label-out">Латиница</span>
+        <span class="editor-label" id="label-out">Latinica</span>
         <span class="char-count" id="char-out">0</span>
       </div>
-      <textarea id="dst" readonly placeholder="Результат появится здесь..."></textarea>
+      <textarea id="dst" readonly placeholder="Rezuljtat poävitsä zdesj..."></textarea>
     </div>
   </div>
 
@@ -282,11 +287,12 @@
   </div>
 
   <div class="bottom-bar">
-    <div class="wc-bar" id="limit-info">Лимит: 10 000 символов (~5 страниц)</div>
+    <div class="wc-bar" id="limit-info">Limit: 10 000 simvolov (~5 stranic)</div>
     <div class="action-btns">
-      <button class="btn" onclick="clearAll()">Очистить</button>
-      <button class="btn primary" onclick="copyResult()">Копировать</button>
-      <span class="copy-badge" id="badge">Скопировано ✓</span>
+      <button class="btn" onclick="clearAll()">Očistitj</button>
+      <button class="btn" onclick="pasteText()">Vstavitj</button>
+      <button class="btn primary" onclick="copyResult()">Kopirovatj</button>
+      <span class="copy-badge" id="badge">Skopirovano ✓</span>
     </div>
   </div>
 
@@ -301,7 +307,6 @@ CYR.forEach((c,i) => { CYR2LAT[c] = LAT[i]; });
 LAT.forEach((l,i) => { if (!LAT2CYR[l]) LAT2CYR[l] = CYR[i]; });
 
 let mode = 'ru-lat';
-
 const src = document.getElementById('src');
 const dst = document.getElementById('dst');
 
@@ -321,7 +326,7 @@ function update() {
   const words = text.trim() ? text.trim().split(/\s+/).length : 0;
   document.getElementById('char-in').textContent = len;
   document.getElementById('char-out').textContent = dst.value.length;
-  document.getElementById('wc-display').textContent = `${words} слов · ${len} символов`;
+  document.getElementById('wc-display').textContent = words + ' slov · ' + len + ' simvolov';
   const pct = Math.min((len / LIMIT) * 100, 100);
   const bar = document.getElementById('progress');
   bar.style.width = pct + '%';
@@ -333,9 +338,11 @@ function setMode(m) {
   const isRuLat = m === 'ru-lat';
   document.getElementById('btn-ru-lat').className = 'dir-btn' + (isRuLat ? ' active' : '');
   document.getElementById('btn-lat-ru').className = 'dir-btn' + (!isRuLat ? ' active' : '');
-  document.getElementById('label-in').textContent = isRuLat ? 'Кириллица' : 'Латиница';
-  document.getElementById('label-out').textContent = isRuLat ? 'Латиница' : 'Кириллица';
-  src.placeholder = isRuLat ? 'Вставь или напиши текст здесь...\nДо 5 страниц (~10 000 символов)' : 'Paste or type Latin text here...\nUp to 5 pages';
+  document.getElementById('label-in').textContent = isRuLat ? 'Kirillica' : 'Latinica';
+  document.getElementById('label-out').textContent = isRuLat ? 'Latinica' : 'Kirillica';
+  src.placeholder = isRuLat
+    ? 'Vstavjte ili napišite tekst zdesj...\nDo 5 stranic (~10 000 simvolov)'
+    : 'Vstavjte ili napišite tekst zdesj...\nDo 5 stranic (~10 000 simvolov)';
   update();
 }
 
@@ -347,6 +354,13 @@ function swapMode() {
 }
 
 function clearAll() { src.value = ''; dst.value = ''; update(); }
+
+function pasteText() {
+  navigator.clipboard.readText().then(text => {
+    src.value = text.slice(0, LIMIT);
+    update();
+  });
+}
 
 function copyResult() {
   if (!dst.value) return;
